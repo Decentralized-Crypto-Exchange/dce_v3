@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { contractABI, contractAddress } from '../lib/constants'
 import { ethers } from 'ethers'
-// import { client } from '../lib/sanityClient'
+import { client } from '../lib/sanityClient'
 import { useRouter } from 'next/router'
 
 export const TransactionContext = React.createContext()
@@ -47,19 +47,19 @@ export const TransactionProvider = ({ children }) => {
   /**
    * Create user profile in Sanity
    */
-  // useEffect(() => {
-  //   if (!currentAccount) return
-  //   ;(async () => {
-  //     const userDoc = {
-  //       _type: 'users',
-  //       _id: currentAccount,
-  //       userName: 'Unnamed',
-  //       address: currentAccount,
-  //     }
+  useEffect(() => {
+    if (!currentAccount) return
+    ;(async () => {
+      const userDoc = {
+        _type: 'users',
+        _id: currentAccount,
+        userName: 'Unnamed',
+        address: currentAccount,
+      }
 
-  //     await client.createIfNotExists(userDoc)
-  //   })()
-  // }, [currentAccount])
+      await client.createIfNotExists(userDoc)
+    })()
+  }, [currentAccount])
 
   const handleChange = (e, name) => {
     setFormData(prevState => ({ ...prevState, [name]: e.target.value }))
@@ -70,6 +70,7 @@ export const TransactionProvider = ({ children }) => {
    * @param {*} metamask Injected MetaMask code from the browser
    * @returns
    */
+
   const checkIfWalletIsConnected = async (metamask = eth) => {
     try {
       if (!metamask) return alert('Please install metamask ')
@@ -194,7 +195,7 @@ export const TransactionProvider = ({ children }) => {
       console.log(error)
     }
   }
-
+ 
   useEffect(() => {
     checkIfWalletIsConnected()
   }, [])

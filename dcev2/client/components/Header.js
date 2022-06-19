@@ -7,6 +7,7 @@ import ethLogo from '../assets/eth.png'
 import uniswapLogo from '../assets/uniswap.png'
 import { useContext } from 'react'
 import { TransactionContext } from '../context/TransactionContext'
+import { client } from '../lib/sanityClient'
 
 const style = {
     wrapper: `p-4 w-screen flex justify-between items-center`,
@@ -31,27 +32,29 @@ const style = {
     console.log({connectWallet,currentAccount});
 
 
-    // useEffect(() => {
-    //   if (currentAccount) {
-    //     ;(async () => {
-    //       const query = `
-    //       *[_type=="users" && _id == "${currentAccount}"] {
-    //         userName,
-    //       }
-    //       `
-    //       const clientRes = await client.fetch(query)
+    
+    useEffect(() => {
+      if (currentAccount) {
+        ;(async () => {
+          const query = `
+          *[_type=="users" && _id == "${currentAccount}"] {
+            userName,
+          }
+          `
+          const clientRes = await client.fetch(query)
   
-    //       if (!(clientRes[0].userName == 'Unnamed')) {
-    //         setUserName(clientRes[0].userName)
-    //       } else {
-    //         setUserName(
-    //           `${currentAccount.slice(0, 7)}...${currentAccount.slice(35)}`,
-    //         )
-    //       }
-    //     })()
-    //   }
-    // }, [currentAccount])
-  
+          if (!(clientRes[0].userName == 'Unnamed')) {
+            setUserName(clientRes[0].userName)
+          } else {
+            setUserName(
+              `${currentAccount.slice(0, 7)}...${currentAccount.slice(35)}`,
+            )
+          }
+        })()
+      }
+    }, [currentAccount])
+
+
     return (
       <div className={style.wrapper}>
         <div className={style.headerLogo}>
@@ -109,7 +112,7 @@ const style = {
 
           {currentAccount ? (
             <div className={`${style.button} ${style.buttonPadding}`}>
-              <div className={style.buttonTextContainer}>0xf8E2EC8C3Ab9ce3f3250d690dA5F6C6cdB74E92d</div>
+              <div className={style.buttonTextContainer}>{ userName }</div>
             </div>
           ) : (
             <div
