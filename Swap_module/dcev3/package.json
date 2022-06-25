@@ -9,8 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@sanity/client": "^3.3.2",
     "@walletconnect/web3-provider": "^1.7.8",
     "@web3auth/web3auth": "^1.0.1",
+    "axios": "^0.27.2",
     "chart.js": "^3.8.0",
     "magic-sdk": "^8.1.1",
     "moralis": "^1.8.0",

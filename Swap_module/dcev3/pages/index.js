@@ -4,6 +4,9 @@ import { AiOutlinePlus } from 'react-icons/ai'
 // import PortfolioChart from '../components/PortfolioChart'
 import BuyTokens from '../components/BuyTokens'
 import Asset from '../components/Asset'
+import { useState, useContext } from 'react'
+import axios from 'axios'
+import { ProjectContext } from '../context/ProjectContext'
 
 const styles = {
   wrapper: 'w-screen h-screen flex flex-col',
@@ -31,15 +34,16 @@ const styles = {
   moreOptions: 'cursor-pointer text-xl',
 } 
 
-export default function Home() {
-
-  return (
+export default function Home({ coins }) {
+  // const [myCoins] = useState([...coins.slice(0, 8)])
+  const { balance, swapError } = useContext(ProjectContext)
+   return (
     <div className={styles.wrapper}>
       <Header/>
       <div className={styles.mainContainer}>
         <div className={styles.leftMain}>
           <div className={styles.portfolioAmountContainer}>
-            <div className={styles.portfolioAmount}> 23 ETH</div>
+            <div className={styles.portfolioAmount}> {balance} </div>
             <div className={styles.portfolioPercent}>
               +0.0008(+0.57%)
               <span className={styles.pastHour}>Past Hour</span>
@@ -52,7 +56,7 @@ export default function Home() {
           </div>
           <div className={styles.buyingPowerContainer}>
             <div className={styles.buyingPowerTitle}>Buying Power</div>
-            <div className={styles.buyingPowerAmount}> 23 ETH</div>
+            <div className={styles.buyingPowerAmount}> {balance}</div>
           </div>
           <div className={styles.notice}>
             <div className={styles.noticeContainer}>
@@ -70,8 +74,6 @@ export default function Home() {
 
             <BiDotsHorizontalRounded className={styles.moreOptions} />
           </div>
-          <Asset coin={"BTC"} price={0.89}/>
-          <Asset coin={"BTC"} price={0.89}/>
           {/* {myCoins.map(coin => {
             let price = parseFloat(coin.price)
             price = price.toFixed(2)
@@ -88,3 +90,33 @@ export default function Home() {
     </div>
   )
 }
+
+
+// export const getStaticProps = async () => {
+//   const options = {
+//     method: 'GET',
+//     url: 'https://coinranking1.p.rapidapi.com/coins',
+//     params: {
+//       referenceCurrencyUuid: 'yhjMzLPhuIDl',
+//       timePeriod: '24h',
+//       'tiers[0]': '1',
+//       orderBy: 'marketCap',
+//       orderDirection: 'desc',
+//       limit: '10',
+//       offset: '0'
+//     },
+//     headers: {
+//       'X-RapidAPI-Key': process.env.COIN_RANKING_KEY,
+//       'X-RapidAPI-Host':   process.env.COIN_RANKING_HOST,
+
+//     }
+//   };
+  
+
+//   const res = await axios.request(options)
+//   const coins = res.data.data.coins
+
+//   return {
+//     props: { coins },
+//   }
+// }
