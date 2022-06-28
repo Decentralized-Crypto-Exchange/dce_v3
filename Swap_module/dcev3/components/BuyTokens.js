@@ -2,11 +2,12 @@ import React, { useContext } from 'react'
 import { ProjectContext } from '../context/ProjectContext'
 
 const styles = {
-  inputAmount: `w-1/2 flex items-center justify-center border border-white rounded-lg p-2 bg-transparent mt-6 text-white placeholder:text-white`,
+  inputAmount: `w-1/2 flex items-center justify-center border border-black rounded-lg p-2 bg-white mt-6 text-black placeholder:text-black`,
   formContainer: `flex items-center`,
-  select: `w-1/2 flex items-center justify-center border border-white rounded-lg p-2 bg-transparent mt-6 text-white placeholder:text-white`,
-  options: `w-1/2 flex items-center justify-center border border-white rounded-lg p-2 bg-black mt-6 text-white placeholder:text-white`,
-  noticeCTA: 'font-bold text-green-500 cursor-pointer mt-5',
+  select: `w-1/2 flex items-center justify-center border border-black rounded-lg p-2 bg-white mt-6 text-black placeholder:text-black`,
+  options: `w-1/2 flex items-center justify-center border border-black rounded-lg p-2 bg-[#2172E5] mt-6 text-black placeholder:text-black`,
+  noticeCTA: 'bg-[#2172E5] my-2 rounded-2xl py-6 px-8 text-xl font-semibold flex items-center justify-center cursor-pointer border border-[#2172E5] hover:border-[#234169]',
+
 }
 
 const BuyTokens = () => {
@@ -77,7 +78,7 @@ const BuyTokens = () => {
           disabled={!isAuthenticated}
           onClick={() => mint()}
         >
-          Send
+          Swap
         </button>
       </div>
     </form>

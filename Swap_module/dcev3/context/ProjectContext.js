@@ -20,7 +20,7 @@ export const ProjectProvider = ({ children }) => {
   
   const [currentAccount, setCurrentAccount] = useState('')
   const [formattedAccount, setFormattedAccount] = useState('')
-  const [coinSelect, setCoinSelect] = useState('DOGE')
+  const [coinSelect, setCoinSelect] = useState('')
   const [toCoin, setToCoin] = useState('')
   const [balance, setBalance] = useState('')
 
@@ -75,10 +75,10 @@ export const ProjectProvider = ({ children }) => {
   }
 
   const getToAddress = () => {
-    if (coinSelect === 'FILE') return fileAddress
-    if (coinSelect === 'DOGE') return dogeAddress
-    if (coinSelect === 'BTC') return bitcoinAddress
-    if (coinSelect === 'USDC') return usdcAddress
+    if (toCoin === 'FILE') return fileAddress
+    if (toCoin === 'DOGE') return dogeAddress
+    if (toCoin === 'BTC') return bitcoinAddress
+    if (toCoin === 'USDC') return usdcAddress
   }
 
   const getToAbi = () => {
@@ -88,51 +88,51 @@ export const ProjectProvider = ({ children }) => {
     if (toCoin === 'USDC') return usdcAbi
   }
 
-  //Mint function for the token with send ether to the contract
-  const mint = async () => {
-    try {
-      if (coinSelect === 'ETH') {
-        if (!isAuthenticated) return
-        await Moralis.enableWeb3()
-        const contractAddress = '0xa3f04643af17ce0B0575d4Ebe8D996fEf7fA5bE2'
-        const abi = dogeAbi
-
-        let options = {
-          contractAddress: contractAddress,
-          functionName: 'mint',
-          abi: abi,
-          params: {
-            to: currentAccount,
-            amount: Moralis.Units.Token('50', '18'),
-          },
-        }
-        sendEth()
-        const transaction = await Moralis.executeFunction(options)
-        const receipt = await transaction.wait(4)
-        console.log(receipt)
-        saveTransaction(receipt.transactionHash, amount, receipt.to)
-      } else {
-        swapTokens()
-        saveTransaction(receipt.transactionHash, amount, receipt.to)
+ //Mint function for the token with send ether to the contract
+ const mint = async () => {
+  try {
+    if (coinSelect === 'ETH') {
+      if (!isAuthenticated) return
+      await Moralis.enableWeb3()
+      const contractAddress = getToAddress()
+      const abi = getToAbi()
+      let options = {
+        contractAddress: contractAddress,
+        functionName: 'mint',
+        abi: abi,
+        params: {
+          to: currentAccount,
+          amount: Moralis.Units.Token('50', '18'),
+        },
       }
-    } catch (error) {
-      console.error(error.message)
+      sendEth()
+      const transaction = await Moralis.executeFunction(options)
+      const receipt = await transaction.wait(4)
+      console.log(receipt)
+      saveTransaction(receipt.transactionHash, amount, receipt.to)
+    } else {
+      swapTokens()
+      saveTransaction(receipt.transactionHash, amount, receipt.to)
     }
+  } catch (error) {
+    console.error(error.message)
   }
+}
 
   const swapTokens = async () => {
     try {
       if (!isAuthenticated) return
       await Moralis.enableWeb3()
-
+      console.log(coinSelect,toCoin)
       if (coinSelect === toCoin) return
-
+      
       const fromOptions = {
         type: 'erc20',
         amount: Moralis.Units.Token(amount, '18'),
         receiver: getContractAddress(),
         contractAddress: getContractAddress(),
       }
+      console.log(fromOptions)
       const toMintOptions = {
         contractAddress: getToAddress(),
         functionName: 'mint',
@@ -142,6 +142,7 @@ export const ProjectProvider = ({ children }) => {
           amount: Moralis.Units.Token(amount, '18'),
         },
       }
+      console.log(toMintOptions);
       let fromTransaction = await Moralis.transfer(fromOptions)
       let toMintTransaction = await Moralis.executeFunction(toMintOptions)
       let fromReceipt = await fromTransaction.wait()
@@ -160,13 +161,13 @@ export const ProjectProvider = ({ children }) => {
 
     let options = {
       type: 'native',
-      amount: Moralis.Units.ETH('0.01'),
+      amount: Moralis.Units.ETH(amount),
       receiver: contractAddress,
     }
     const transaction = await Moralis.transfer(options)
     const receipt = await transaction.wait()
     console.log(receipt)
-    saveTransaction(receipt.transactionHash, '0.01', receipt.to)
+    saveTransaction(receipt.transactionHash, amount, receipt.to)
   }
 
   const saveTransaction = async (txHash, amount, toAddress) => {
