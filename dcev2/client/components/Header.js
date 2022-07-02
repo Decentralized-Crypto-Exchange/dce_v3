@@ -9,6 +9,7 @@ import { useContext } from 'react'
 import { TransactionContext } from '../context/TransactionContext'
 import { client } from '../lib/sanityClient'
 
+
 const style = {
     wrapper: `p-4 w-screen flex justify-between items-center`,
     headerLogo: `text-black items-center justify-start`,
